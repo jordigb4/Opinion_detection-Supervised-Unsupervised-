@@ -37,7 +37,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This report is the justification for the solution proposed by the problem raised. This is, to program a classifier of the polarity of subjective texts. In a first part, we implement a supervised ML method, using as data the Movie Reviews Corpus of NLTK, made up of 1000 examples of positive opinions and 1000 negative opinions. However, in order to compare the results, we will also want to adopt an unsupervised view, using the polarity scores that SentiWordNet provides.  
+This is a project to program a classifier of the polarity of subjective texts. In a first part, we implement a supervised ML method, using as data the Movie Reviews Corpus of NLTK, made up of 1000 examples of positive opinions and 1000 negative opinions. However, in order to compare the results, we will also want to adopt an unsupervised view, using the polarity scores that SentiWordNet provides.  
 
 Among the objectives, the introduction of concepts and tools of Natural Language Processing stands out, as well as the analysis of which data preprocessing is most appropriate to the task of distinguishing its polarity. In addition, understanding the importance of disambiguation of senses, since relating the syntactic and semantic content of a sentence will lead models to better results.
 
