@@ -81,7 +81,9 @@ def normalize_corpus(corpus, html_stripping=True, contraction_expansion=True,
         if text_lower_case:
             doc = doc.lower()
 
-        doc = re.sub(r'\b[a-zA-Z]\b', '', doc) #remove single letters
+        doc = re.sub(r'\b[a-zA-Z]$', '', doc)
+        doc = re.sub(r'^[a-zA-Z]\b', '', doc)
+        doc = re.sub(r'\b[a-zA-Z]\b', '', doc)
         doc = re.sub(r'[\r|\n|\r\n]+', ' ',doc)
         
 
