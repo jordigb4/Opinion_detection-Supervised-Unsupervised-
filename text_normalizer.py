@@ -41,8 +41,11 @@ def expand_contractions(text, contraction_mapping = CONTRACTION_MAP):
     expanded_text = re.sub("'", "", expanded_text)
     return expanded_text
 
-def non_letters_remove(text):
-    text = re.sub('[^a-zA-Z\s]', '', text)
+def non_letters_remove(text, exlamation = False):
+    if exlamation:
+        text = re.sub('[^a-zA-Z\s!]', '', text)
+    else:
+        text = re.sub('[^a-zA-Z\s]', '', text)
     return text
 
 def lemmatize_text(text):
@@ -60,9 +63,9 @@ def remove_stopwords(text, is_lower_case = False):
     filtered_text = ' '.join(filtered_tokens)    
     return filtered_text
 
-def normalize_corpus(corpus, html_stripping=True, contraction_expansion=True,
+def normalize_corpus(corpus, split_phrases = False, html_stripping=True, contraction_expansion=True,
                      accented_char_removal=True, text_lower_case=True, 
-                     text_lemmatization=True, remove_non_letters=True, 
+                     text_lemmatization=True, remove_non_letters=True, keep_exlamation = False, 
                      stopword_removal=True):
     
     normalized_corpus = []
@@ -84,14 +87,16 @@ def normalize_corpus(corpus, html_stripping=True, contraction_expansion=True,
         doc = re.sub(r'\b[a-zA-Z]$', '', doc)
         doc = re.sub(r'^[a-zA-Z]\b', '', doc)
         doc = re.sub(r'\b[a-zA-Z]\b', '', doc) #remove single letters
+
+        if split_phrases:
+            doc = re.sub(r' . \n', 'linebreak', doc)
         doc = re.sub(r'[\r|\n|\r\n]+', ' ',doc)
-        
 
         special_char_pattern = re.compile(r'([{.(-)!}])')
         doc = special_char_pattern.sub(" \\1 ", doc)
-        
+
         if remove_non_letters:
-            doc = non_letters_remove(doc)  
+            doc = non_letters_remove(doc, exlamation = keep_exlamation)  
 
         if text_lemmatization:
             doc = lemmatize_text(doc)
@@ -99,7 +104,7 @@ def normalize_corpus(corpus, html_stripping=True, contraction_expansion=True,
         doc = re.sub(' +', ' ', doc)
         
         if stopword_removal:
-            doc = remove_stopwords(doc, is_lower_case=text_lower_case)
+            doc = remove_stopwords(doc, is_lower_case = text_lower_case)
             
         normalized_corpus.append(doc)
         
