@@ -7,27 +7,29 @@ from nltk.corpus import sentiwordnet as swn
 from collections import Counter
 import nltk
 import numpy as np
-
+from collections import defaultdict
 class HybridClassifier():
-    def __init__(self,ponderations = [1/3,1/3,1/3]):
+    def __init__(self):
         self.clf_lr = joblib.load('models/log_reg_model.pkl')
         self.clf_svm = joblib.load('models/svm_model.pkl')
         self.bow = joblib.load('models/bow.pkl')
         nltk.download('sentiwordnet')
         nltk.download('movie_reviews')
         nltk.download('wordnet')
-    def predict(self, text):
+        
+    def predict(self, text,ponderations = [1/3,1/3,1/3],test = False, test_data = None):
+ 
         X_test_supervised = self.__preprocessing(text)
         X_test_unsupervised = tn.normalize_corpus(text, split_phrases = True, stopword_removal = False)
-
         pred_lr = self.__predict_lr(X_test_supervised); pred_svm = self.__predict_svm(X_test_supervised); pred_unsuper = self.__predict_unsuper(X_test_unsupervised)
-        print(pred_lr)
-        print(pred_svm)
-        print(pred_unsuper)
         predictions = [pred_lr, pred_svm, pred_unsuper]
-
-        answers = np.array(self.__combine_predictions(predictions))
-        print(answers)
+        if test:
+            result = []
+            for weights in test_data:
+                answers = np.array(self.__combine_predictions(predictions,weights))
+                result.append((answers,weights))
+            return result
+        answers = np.array(self.__combine_predictions(predictions,ponderations))
         return answers
 
     def __predict_lr(self, text):
@@ -102,17 +104,18 @@ class HybridClassifier():
             final_sentiment = 1 if norm_final_score >= 0 else 0
             pred.append(final_sentiment)
         return pred
-    def __combine_predictions(self,vector_predictions):
+    def __combine_predictions(self,vector_predictions,ponderations):
         ensemble_predictions = []
 
         for preds in zip(*vector_predictions):
-            counter = Counter(preds)
-            most_common = counter.most_common(1)
+            vote_counts = defaultdict(float)
 
-            if most_common[0][1] >= 2:  
-                ensemble_predictions.append(most_common[0][0])
-            else:
-                ensemble_predictions.append(preds[0])  
+            for pred, weight in zip(preds, ponderations):
+                vote_counts[pred] += weight
+
+
+            chosen_pred = max(vote_counts, key=vote_counts.get)
+            ensemble_predictions.append(chosen_pred)
 
         return ensemble_predictions
     
@@ -124,3 +127,5 @@ class HybridClassifier():
     def __feature_extraction(self,text):
         full_data = self.bow.transform(text)
         return full_data
+    
+    
