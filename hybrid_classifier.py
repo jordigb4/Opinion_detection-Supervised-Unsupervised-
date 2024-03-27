@@ -4,10 +4,10 @@ import joblib
 from nltk.tokenize import word_tokenize
 from nltk.corpus import wordnet as wn
 from nltk.corpus import sentiwordnet as swn
-from collections import Counter
 import nltk
 import numpy as np
 from collections import defaultdict
+
 class HybridClassifier():
     def __init__(self):
         self.clf_lr = joblib.load('models/log_reg_model.pkl')
@@ -17,19 +17,20 @@ class HybridClassifier():
         nltk.download('movie_reviews')
         nltk.download('wordnet')
         
-    def predict(self, text,ponderations = [1/3,1/3,1/3],test = False, test_data = None):
+    def predict(self, text, ponderations = [1/3, 1/3, 1/3], test = False, test_data = None):
  
         X_test_supervised = self.__preprocessing(text)
         X_test_unsupervised = tn.normalize_corpus(text, split_phrases = True, stopword_removal = False)
-        pred_lr = self.__predict_lr(X_test_supervised); pred_svm = self.__predict_svm(X_test_supervised); pred_unsuper = self.__predict_unsuper(X_test_unsupervised)
+        pred_lr = self.__predict_lr(X_test_supervised); pred_svm = self.__predict_svm(X_test_supervised); 
+        pred_unsuper = self.__predict_unsuper(X_test_unsupervised)
         predictions = [pred_lr, pred_svm, pred_unsuper]
         if test:
             result = []
             for weights in test_data:
-                answers = np.array(self.__combine_predictions(predictions,weights))
-                result.append((answers,weights))
+                answers = np.array(self.__combine_predictions(predictions, weights))
+                result.append((answers, weights))
             return result
-        answers = np.array(self.__combine_predictions(predictions,ponderations))
+        answers = np.array(self.__combine_predictions(predictions, ponderations))
         return answers
 
     def __predict_lr(self, text):
@@ -104,27 +105,26 @@ class HybridClassifier():
             final_sentiment = 1 if norm_final_score >= 0 else 0
             pred.append(final_sentiment)
         return pred
-    def __combine_predictions(self,vector_predictions,ponderations):
-        ensemble_predictions = []
+    
+    def __combine_predictions(self, vector_predictions, ponderations):
 
+        ensemble_predictions = []
         for preds in zip(*vector_predictions):
             vote_counts = defaultdict(float)
 
             for pred, weight in zip(preds, ponderations):
                 vote_counts[pred] += weight
 
-
-            chosen_pred = max(vote_counts, key=vote_counts.get)
+            chosen_pred = max(vote_counts, key = vote_counts.get)
             ensemble_predictions.append(chosen_pred)
-
         return ensemble_predictions
     
-    def __preprocessing(self,text):
+    def __preprocessing(self, text):
         normalized = tn.normalize_corpus(text)
         full_data = self.__feature_extraction(normalized)
         return full_data
 
-    def __feature_extraction(self,text):
+    def __feature_extraction(self, text):
         full_data = self.bow.transform(text)
         return full_data
     
