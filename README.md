@@ -30,7 +30,6 @@
     <li><a href="#repo-structures">Repository Structures</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -61,7 +60,7 @@ To get a local copy up and running follow these simple example steps.
 
 1. Clone the repo
   ```sh
-  git clone https://github.com/jordigb4/Naive-Language-Classifier.git
+  git clone https://github.com/jordigb4/Opinion_detection-Supervised-Unsupervised-.git
   ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -70,16 +69,13 @@ To get a local copy up and running follow these simple example steps.
 ## Usage
 
 ```python
-from language_identifier import LanguageIdentifier
+from hybrid_classifier import HybridClassifier
 
 # Train classifier
-LangId = LanguageIdentifier()
+classifier = HybridClassifier()
 
-#Predict phrase or
-pred = LangId.identify_language('The classifier must be used like this', smoothing = 'Lidstone')
-#Predict valid text file
-pred = LangId.identify_language(f"corpora/eng_tst.txt", smoothing = 'Lidstone')
-
+#Predict
+pred = classifier.predict(X_test)
 print(pred)
 ```
 
@@ -88,15 +84,15 @@ print(pred)
 ## Repository Structures
 
     .
-    ├── corpora                 # Train, val, and test corpora files (.txt)
-    ├── images                  # Resulting Confusion Matrices
-    ├── Preprocessing           # File with functions to treat raw corpora
-    ├── language_identifier     # MAIN file, with classifier model class
-    ├── test.ipynb              # Test language_identifier accuracy, both Lidstone and Abs. Discounting 
-    ├── wrong_classified.ipynb  # Obtain wrong classified phrases from test corpora
-    ├── all_wrong_*.csv         # Compilation of misclassified phrases
-    ├── foreign_languages.ipynb # Experiment to check potential model BIAS
-    ├── best_alpha.py           # Obtain best Lidstone parameter for data in corpora dir.
+    ├── models                                  # Trained models
+    ├── images                                  # Resulting Confusion Matrices
+    ├── contractions.py                         # Dict with english contractions expansion
+    ├── text_normalizer.py                      # Text preprocessing function
+    ├── textserver.py                           # Word Sense Desambiguation Module
+    ├── hybrid_classifier.py                    # Class with hybrid classifier 
+    ├── OpinionDetection-Supervised.ipynb       # Work on supervised classifiers
+    ├── OpinionDetection-Unsupervised.ipynb     # Work on SentiWordnet-based model
+    ├── OpinionDetection-Hybrid.ipynb           # Mix Supervised-Unsupervised
     └── README.md
 
 <p align="right">(<a href="#repo-structures">back to top</a>)</p>
@@ -120,17 +116,9 @@ Don't forget to give the project a star! Thanks again!
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
+[Alberto J. LinkedIn](https://www.linkedin.com/in/alberto-jerez-cubero-65abb82a3/)  
+[Jordi G. LinkedIn](https://www.linkedin.com/in/jordi-granja-bayot/)
 
-Project Link: [https://github.com/jordigb4/Naive-Language-Classifier](https://github.com/jordigb4/Naive-Language-Classifier)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-* [Naive Bayes Classifier Paper](https://web.stanford.edu/~jurafsky/slp3/)
+Project Link: [https://github.com/jordigb4/Opinion_detection-Supervised-Unsupervised-](https://github.com/jordigb4/Opinion_detection-Supervised-Unsupervised-)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
