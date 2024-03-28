@@ -13,11 +13,8 @@ class HybridClassifier():
         self.clf_lr = joblib.load('models/log_reg_model.pkl')
         self.clf_svm = joblib.load('models/svm_model.pkl')
         self.bow = joblib.load('models/bow.pkl')
-        nltk.download('sentiwordnet')
-        nltk.download('movie_reviews')
-        nltk.download('wordnet')
-        
-    def predict(self, text, ponderations = [1/3, 1/3, 1/3], test = False, test_data = None):
+       
+    def predict(self, text, ponderations = [1, 1, 1], test = False, test_data = None):
  
         X_test_supervised = self.__preprocessing(text)
         X_test_unsupervised = tn.normalize_corpus(text, split_phrases = True, stopword_removal = False)
@@ -111,12 +108,15 @@ class HybridClassifier():
         ensemble_predictions = []
         for preds in zip(*vector_predictions):
             vote_counts = defaultdict(float)
-
             for pred, weight in zip(preds, ponderations):
                 vote_counts[pred] += weight
 
-            chosen_pred = max(vote_counts, key = vote_counts.get)
-            ensemble_predictions.append(chosen_pred)
+            max_weight = max(vote_counts.values())
+            if max_weight == 0:
+                ensemble_predictions.append(preds[0]) #logistic regression prediction
+            else:
+                chosen_pred = max(vote_counts, key=vote_counts.get)
+                ensemble_predictions.append(chosen_pred)
         return ensemble_predictions
     
     def __preprocessing(self, text):
