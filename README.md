@@ -116,8 +116,8 @@ Don't forget to give the project a star! Thanks again!
 <!-- CONTACT -->
 ## Contact
 
-[Connect with us on LinkedIn](https://www.linkedin.com/in/alberto-jerez-cubero-65abb82a3/)  
-                           [](https://www.linkedin.com/in/jordi-granja-bayot/)
+[Alberto J. LinkedIn](https://www.linkedin.com/in/alberto-jerez-cubero-65abb82a3/)  
+[Jordi G. LinkdIN](https://www.linkedin.com/in/jordi-granja-bayot/)
 
 Project Link: [https://github.com/jordigb4/Opinion_detection-Supervised-Unsupervised-](https://github.com/jordigb4/Opinion_detection-Supervised-Unsupervised-)
 
